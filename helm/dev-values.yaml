@@ -8,3 +8,6 @@ ingress:
   hosts: 
   - dev.sp.local
 
+image:
+  repository: {REGISTRY}
+  tag: ${IMAGE_TAG}
