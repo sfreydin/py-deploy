@@ -1,0 +1,10 @@
+nameOverride: "stage-py"
+
+service:
+  type: NodePort
+  nodePort: 30002
+
+ingress:
+  hosts: 
+  - stage.sp.local
+

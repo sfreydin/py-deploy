@@ -1,0 +1,10 @@
+nameOverride: "dev-py"
+
+service:
+  type: NodePort
+  nodePort: 30003
+
+ingress:
+  hosts: 
+  - dev.sp.local
+

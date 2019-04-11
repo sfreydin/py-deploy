@@ -1,0 +1,7 @@
+nameOverride: "prod-py"
+
+service:
+  type: NodePort
+  nodePort: 30001
+
+
