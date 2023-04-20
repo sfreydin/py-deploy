@@ -8,7 +8,7 @@ image:
   repository: ghcr.io/sfreydin/py-deploy
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "c60875b31a4cc3025490c75f33b136b0f98724dc"
 
 imagePullSecrets: []
 nameOverride: ""
