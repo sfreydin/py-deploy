@@ -1,0 +1,25 @@
+name: Docker Build and Push on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+env:
+  DOCKER_REGISTRY: ghcr.io
+  DOCKER_REPOSITORY: sfreydin/py-deploy
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Docker image
+      run: docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:${{ github.sha }} .
+    - name: Push Docker image
+      run: |
+        echo $DOCKER_PASSWORD | docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME --password-stdin
+        docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:${{ github.sha }}
+
