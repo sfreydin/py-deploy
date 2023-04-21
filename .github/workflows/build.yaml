@@ -11,8 +11,7 @@ env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   PR_NUMBER: ${{ github.event.pull_request.number }}
-  REPO_NAME: py-deploy
-  ARGO_APP_NAME: pr-$PR_NUMBER-$REPO_NAME
+  ARGO_APP_NAME: pr-${{ github.event.pull_request.number }}-py-deploy
 jobs:
   build:
     runs-on: ubuntu-latest
