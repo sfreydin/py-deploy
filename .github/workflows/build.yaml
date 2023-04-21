@@ -10,16 +10,29 @@ env:
   DOCKER_REPOSITORY: sfreydin/py-deploy
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+  REPO_NAME: py-deploy
+  ARGO_APP_NAME: pr-${PR_NUMBER}-${REPO_NAME}
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build Docker image
-      run: docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:${{ github.sha }} .
+      run: echo docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:pr-${PR_NUMBER}-${{ github.sha }} .
     - name: Push Docker image
       run: |
         echo $DOCKER_PASSWORD | docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME --password-stdin
-        docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:${{ github.sha }}
+        echo docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:pr-${PR_NUMBER}-${{ github.sha }}
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger ArgoCD
+      run: |
+        echo argocd app create ${ARGO_APP_NAME} --repo ${{ github.server_url }}/${{ github.repository }} --revision ${{ github.event.pull_request.head.ref }} --path helm/py --dest-namespace ${ARGO_APP_NAME}  --dest-server https://kubernetes.default.svc --sync-option CreateNamespace=true  --helm-set global.pr=${PR_NUMBER}
 
+
+
+#         run: echo "Pull Request Number: ${{ github.event.pull_request.number }}, Branch: ${{ github.event.pull_request.head.ref }}"
+#         run: echo "${{ github.repository }}, ${{ github.server_url }}/${{ github.repository }}"
+ 
