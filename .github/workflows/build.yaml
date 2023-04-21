@@ -29,7 +29,8 @@ jobs:
     steps:
     - name: Trigger ArgoCD
       run: |
-        echo argocd app create ${ARGO_APP_NAME} --repo ${{ github.server_url }}/${{ github.repository }} --revision ${{ github.event.pull_request.head.ref }} --path helm/py --dest-namespace ${ARGO_APP_NAME}  --dest-server https://kubernetes.default.svc --sync-option CreateNamespace=true  --helm-set global.pr=${PR_NUMBER}
+        echo argocd app create ${ARGO_APP_NAME} --repo ${{ github.server_url }}/${{ github.repository }} --revision ${{ github.event.pull_request.head.ref }} --path helm/py --dest-namespace ${ARGO_APP_NAME}  --dest-server https://kubernetes.default.svc --sync-option CreateNamespace=true  --helm-set global.pr=${PR_NUMBER} --upsert --sync-option Prune=true --sync-policy automated --self-heal
+
 
 
 
