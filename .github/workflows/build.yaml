@@ -12,27 +12,25 @@ env:
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   PR_NUMBER: ${{ github.event.pull_request.number }}
   ARGO_APP_NAME: pr-${{ github.event.pull_request.number }}-py-deploy
+  IMAGE_TAG: pr-${{ github.event.pull_request.number }}-${{ github.sha }}
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build Docker image
-      run: echo docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:pr-${PR_NUMBER}-${{ github.sha }} .
+      run: echo docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:${IMAGE_TAG} .
     - name: Push Docker image
       run: |
         echo $DOCKER_PASSWORD | docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME --password-stdin
-        echo docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:pr-${PR_NUMBER}-${{ github.sha }}
+        echo docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:${IMAGE_TAG}
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
     - name: Trigger ArgoCD
       run: |
-        echo argocd app create ${ARGO_APP_NAME} --repo ${{ github.server_url }}/${{ github.repository }} --revision ${{ github.event.pull_request.head.ref }} --path helm/py --dest-namespace ${ARGO_APP_NAME}  --dest-server https://kubernetes.default.svc --sync-option CreateNamespace=true  --helm-set global.pr=${PR_NUMBER} --upsert --sync-option Prune=true --sync-policy automated --self-heal
-
-
-
+        echo argocd app create ${ARGO_APP_NAME} --repo ${{ github.server_url }}/${{ github.repository }} --revision ${{ github.event.pull_request.head.ref }} --path helm/py --dest-namespace ${ARGO_APP_NAME}  --dest-server https://kubernetes.default.svc --sync-option CreateNamespace=true  --helm-set global.pr=${PR_NUMBER} --helm-set image.tag=${IMAGE_TAG} --upsert --sync-option Prune=true --sync-policy automated --self-heal
 
 #         run: echo "Pull Request Number: ${{ github.event.pull_request.number }}, Branch: ${{ github.event.pull_request.head.ref }}"
 #         run: echo "${{ github.repository }}, ${{ github.server_url }}/${{ github.repository }}"
