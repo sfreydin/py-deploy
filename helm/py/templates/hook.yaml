@@ -8,6 +8,7 @@ metadata:
     "helm.sh/hook": post-install,pre-upgrade
     "helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": hook-succeeded    
+    argocd.argoproj.io/hook: PreSync
 spec:
   backoffLimit: 0
   template:
@@ -20,5 +21,5 @@ spec:
         image: alpine:latest
         command: ["sh", "-c", "for i in {1..2}; do echo 'Just waiting'; sleep 30; done"]
       terminationGracePeriodSeconds: 30
-  ttlSecondsAfterFinished: 0
+  ttlSecondsAfterFinished: 300
 
