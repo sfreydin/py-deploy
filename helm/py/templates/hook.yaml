@@ -21,5 +21,5 @@ spec:
         image: alpine:latest
         command: ["sh", "-c", "for i in {1..2}; do echo 'Just waiting. Current global.pr={{ .Values.global.pr }}'; sleep 30; done exit $(( $RANDOM % 2 ))"]
       terminationGracePeriodSeconds: 30
-  ttlSecondsAfterFinished: 300
+  ttlSecondsAfterFinished: 3600
 
