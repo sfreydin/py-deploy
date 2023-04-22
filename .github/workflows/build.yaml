@@ -12,12 +12,15 @@ env:
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   PR_NUMBER: ${{ github.event.pull_request.number }}
   ARGO_APP_NAME: pr-${{ github.event.pull_request.number }}-py-deploy
-  IMAGE_TAG: pr-${{ github.event.pull_request.number }}-${{ github.sha }}
+    #  IMAGE_TAG: pr-${{ github.event.pull_request.number }}-${{ github.sha }}
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: set env vars
+      run: |
+        echo "IMAGE_TAG=pr-${PR_NUMBER}-$(date '+%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
     - name: Build Docker image
       run: docker build -t $DOCKER_REGISTRY/$DOCKER_REPOSITORY:${IMAGE_TAG} .
     - name: Push Docker image
