@@ -34,4 +34,10 @@ jobs:
 
 #         run: echo "Pull Request Number: ${{ github.event.pull_request.number }}, Branch: ${{ github.event.pull_request.head.ref }}"
 #         run: echo "${{ github.repository }}, ${{ github.server_url }}/${{ github.repository }}"
- 
+
+
+# argocd-image-updater.argoproj.io/image-list: pyimage=some/image
+# argocd-image-updater.argoproj.io/pyimage.update-strategy: name
+# argocd-image-updater.argoproj.io/pyimage.allow-tags: regexp:^pr\-\d+-.*$
+# todo: try to push pr-3-xxx tag and check that argocd-image-updater should sync this image-tag
+
