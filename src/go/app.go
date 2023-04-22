@@ -20,7 +20,7 @@ func headers(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-    fmt.Println("=== App is started on 8080 port ====")
+    fmt.Println("=== App is started on 8080 port. App_version=v1.0.0 ====")
     http.HandleFunc("/hello", hello)
     http.HandleFunc("/headers", headers)
 
