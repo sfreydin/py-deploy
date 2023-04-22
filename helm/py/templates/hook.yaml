@@ -9,6 +9,9 @@ metadata:
     "helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": hook-succeeded    
     argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-options: PruneLast=true
+    argocd.argoproj.io/sync-options: Prune=true
+    argocd.argoproj.io/sync-options: Replace=true
 spec:
   backoffLimit: 0
   template:
